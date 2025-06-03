@@ -40,7 +40,7 @@ jobs:
 
       # 3. Faz o upload do relatório gerado como um "artefato"
       - name: Upload Report as Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           # Nome do artefato que aparecerá na página do workflow
           name: relatorio-copilot
