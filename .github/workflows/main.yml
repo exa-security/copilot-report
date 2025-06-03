@@ -26,27 +26,24 @@ jobs:
 
       # 2. Executa a ação "Copilot Usage Report"
       - name: Generate Copilot Usage Report
-        uses: andymckay/copilot-usage-report@v1
+        uses: ambilykk/copilot-usage-report@main
         id: copilot_report
         with:
           # Token de acesso que criamos, armazenado de forma segura
-          token: ${{ secrets.COPILOT_USAGE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.COPILOT_USAGE_TOKEN }}
           
           # Nome exato da sua organização (sensível a maiúsculas/minúsculas)
-          org: 'exa-security'
-          
-          # Formato do relatório: 'csv' ou 'json'
-          format: 'csv'
+          org_name: 'exa-security'
           
           # Nome do arquivo de saída
-          filename: 'copilot-usage-report.csv'
+          file_path: data/Copilot-Usage-Report.json
 
       # 3. Faz o upload do relatório gerado como um "artefato"
       - name: Upload Report as Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           # Nome do artefato que aparecerá na página do workflow
           name: relatorio-copilot
           
           # Caminho para o arquivo que foi gerado no passo anterior
-          path: copilot-usage-report.csv
+          path: data/Copilot-Usage-Report.json
