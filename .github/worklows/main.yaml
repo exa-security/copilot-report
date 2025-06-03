@@ -1,0 +1,52 @@
+# Nome do Workflow
+name: 'Relatório Semanal de Uso do Copilot'
+
+# Gatilhos (Triggers) - Como o workflow é iniciado
+on:
+  # Permite que você inicie este workflow manualmente a partir da aba "Actions"
+  workflow_dispatch:
+
+  # Executa automaticamente toda segunda-feira às 9h da manhã
+  schedule:
+    - cron: '0 9 * * 1'
+
+# Tarefas que o workflow vai executar
+jobs:
+  generate_copilot_report:
+    # O tipo de máquina virtual para executar a tarefa
+    runs-on: ubuntu-latest
+    permissions:
+      # Permissão necessária para fazer upload do relatório como um artefato
+      contents: read
+
+    steps:
+      # 1. Clona o código do seu repositório para a máquina virtual
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Executa a ação "Copilot Usage Report"
+      - name: Generate Copilot Usage Report
+        uses: andymckay/copilot-usage-report@v1
+        id: copilot_report
+        with:
+          # Token de acesso que criamos, armazenado de forma segura
+          token: ${{ secrets.COPILOT_USAGE_TOKEN }}
+          
+          # Nome exato da sua organização (sensível a maiúsculas/minúsculas)
+          org: 'exa-security'
+          
+          # Formato do relatório: 'csv' ou 'json'
+          format: 'csv'
+          
+          # Nome do arquivo de saída
+          filename: 'copilot-usage-report.csv'
+
+      # 3. Faz o upload do relatório gerado como um "artefato"
+      - name: Upload Report as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          # Nome do artefato que aparecerá na página do workflow
+          name: relatorio-copilot
+          
+          # Caminho para o arquivo que foi gerado no passo anterior
+          path: copilot-usage-report.csv
